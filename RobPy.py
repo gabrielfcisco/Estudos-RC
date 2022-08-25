@@ -10,7 +10,10 @@ def cria_vetor3(vlist: list) -> np.array:
     :param vlist: Lista com as componentes [vx, vy, vz] do vetor desejado
     :return: np.array: vetor (3, 1) com os valores desejados
     """
-    pass
+    if len(vlist) !=3 :
+        raise ValueError("A lista não possui tamanho 3")
+    return np.asarray([[vlist[0]],[vlist[1]],[vlist[2]]])
+
 
 
 def checa_vetor3(v: np.array) -> None:
@@ -19,7 +22,10 @@ def checa_vetor3(v: np.array) -> None:
     :param v:
     :return:
     """
-    pass
+    aux = v.shape
+    if aux != (3,1):
+        raise ValueError("O vetor não é da forma 3x1")
+    
 
 
 def produto_escalar(v1: np.array, v2: np.array) -> float:
@@ -29,7 +35,9 @@ def produto_escalar(v1: np.array, v2: np.array) -> float:
     :param v2: vetor (np.array) coluna de 3 elementos
     :return: escalar: resultado de v1.v2
     """
-    pass
+    checa_vetor3(v1)
+    checa_vetor3(v2)
+    return np.sum(v1*v2)
 
 
 def norma_vetor(v: np.array) -> float:
@@ -38,7 +46,7 @@ def norma_vetor(v: np.array) -> float:
     :param v: vetor (np.array) coluna de 3 elementos
     :return: escalar: norma do vetor
     """
-    pass
+    return np.sqrt(produto_escalar(v,v))
 
 
 def tamanho_proj_vetores(v1: np.array, v2: np.array) -> float:
@@ -48,7 +56,7 @@ def tamanho_proj_vetores(v1: np.array, v2: np.array) -> float:
     :param v2: vetor (np.array) coluna de 3 elementos
     :return: escalar: tamanho da projeção de v1 sobre v2
     """
-    pass
+    return produto_escalar(v1,v2) / norma_vetor(v2)
 
 
 def proj_vetores(v1: np.array, v2: np.array) -> np.array:
@@ -58,6 +66,7 @@ def proj_vetores(v1: np.array, v2: np.array) -> np.array:
     :param v2: vetor (np.array) coluna de 3 elementos
     :return: vetor (np.array) coluna de 3 elementos com o resultado da projeção
     """
+
     pass
 
 
