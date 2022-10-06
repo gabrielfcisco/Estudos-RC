@@ -183,8 +183,7 @@ def checa_vetor4(v: np.array) -> None:
     :param v: vetor a verificar
     :return: nenhum.
     """
-    aux = v.shape
-    if aux != (4, 1):
+    if v.shape != (4, 1):
         raise ValueError("O vetor não é da forma 4x1")
 
 
@@ -194,8 +193,7 @@ def checa_matriz33(m: np.array) -> None:
     :param m: matriz a verificar
     :return: nenhum.
     """
-    aux = m.shape
-    if aux != (3, 3):
+    if m.shape != (3, 3):
         raise ValueError("A matriz não é da forma 3x3")
 
 
@@ -247,8 +245,14 @@ def cria_operador4(m_rot_b_a: np.array = np.eye(3), v_o_a: np.array = np.zeros([
     :param det_tol:
     :return:
     """
-    pass
+    checa_matriz33 (m_rot_b_a)
+    checa_matriz_rotacao (m_rot_b_a, det_tol=det_tol)
+    checa_vetor3 (v_o_a)
 
+    T = np.append(m_rot_b_a, v_o_a, axis=1)
+    T = np.append(T, np.asarray([[0, 0, 0, 1]]), axis = 0)
+
+    return T
 
 def constroi_vetor(v_b: np.array,
                    m_rot_b_a: np.array = np.eye(3),
@@ -263,7 +267,17 @@ def constroi_vetor(v_b: np.array,
     :param det_tol: tolerância do determinante
     :return: vetor (3, 1) na base a
     """
-    pass
+    checa_matriz33 (m_rot_b_a)
+    checa_matriz_rotacao (m_rot_b_a, det_tol=det_tol)
+    checa_vetor3 (v_o_a)
+    checa_vetor3(v_b)
+
+    T = cria_operador4(m_rot_b_a, v_o_a, det_tol=det_tol)
+    v_b4 = cria_vetor4(v_b)
+
+    v4 = T @ v_b4
+
+    return np.asarray(v4[0:3, :])
 
 # Parte 4
 
@@ -280,8 +294,12 @@ def __distancia_entre_retas_np(po1: np.array, vs1: np.array, po2: np.array, vs2:
     :param vs2: Vetor orientação da reta 1
     :return: distância entre as retas (float, positivo ou nulo)
     """
-    pass
+    v = vs1 @ vs2
+    v /= norma_vetor(v)
+    p12 = po2 - po1
+    p12_p = proj_vetores(p12, v)
 
+    return norma_vetor(p12_p)
 
 def __distancia_entre_retas_p(po1: np.array, po2: np.array, vs: np.array) -> float:
     """
@@ -294,7 +312,11 @@ def __distancia_entre_retas_p(po1: np.array, po2: np.array, vs: np.array) -> flo
     :param vs: Vetor direção de ambas as retas
     :return: distância entre as retas (float, não negativo)
     """
-    pass
+    vs /= norma_vetor(vs)
+    p12 = po2 - po1
+    p12_vs = proj_vetores(p12, vs)
+
+    return norma_vetor(p12 - p12_vs)
 
 
 def distancia_entre_retas(po1: np.array, vs1: np.array, po2: np.array, vs2: np.array, angtol=1e-3) -> float:
@@ -330,7 +352,8 @@ def __eixo_reta_12_np(po1: np.array, vs1: np.array, po2: np.array, vs2: np.array
     :param vs2: Vetor orientação da reta 1
     :return: vetor unitário que aponta da reta 1 à reta 2
     """
-    pass
+    p12 = po2 - po1
+    
 
 
 def __eixo_reta_12_p(po1: np.array, po2: np.array, vs: np.array) -> float:
