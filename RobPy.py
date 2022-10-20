@@ -353,10 +353,15 @@ def __eixo_reta_12_np(po1: np.array, vs1: np.array, po2: np.array, vs2: np.array
     :return: vetor unitário que aponta da reta 1 à reta 2
     """
     p12 = po2 - po1
-    
+    v = produto_vetorial(vs1,vs2)
+    v /= norma_vetor(v)
+    aux = produto_escalar(v,p12)
+    if aux < 0:
+        return -v
+    else: 
+        return v
 
-
-def __eixo_reta_12_p(po1: np.array, po2: np.array, vs: np.array) -> float:
+def __eixo_reta_12_p(po1: np.ndarray, po2: np.ndarray, vs: np.ndarray) -> float:
     """
     *** FUNÇÃO INTERNA AO MÓDULO ***
     Calcula um vetor unitário que vai da reta 1 à reta 2 necessariamente. As retas devem ser paralelas
@@ -365,10 +370,13 @@ def __eixo_reta_12_p(po1: np.array, po2: np.array, vs: np.array) -> float:
     :param vs: Vetor direção de ambas as retas
     :return: vetor unitário que aponta da reta 1 à reta 2
     """
-    pass
+    p12 = po2 - po1
+    p12p = proj_vetores(p12, vs)
+    p12n = p12 - p12p
+    return p12n/norma_vetor(p12n)
 
 
-def eixo_reta_12(po1: np.array, vs1: np.array, po2: np.array, vs2: np.array, angtol=1e-3) -> float:
+def eixo_reta_12(po1: np.ndarray, vs1: np.ndarray, po2: np.ndarray, vs2: np.ndarray, angtol=1e-3) -> float:
     """
     Calcula um vetor unitário que aponta da reta 1 à reta 2, independente de sua orientação.
     :param po1: Vetor posição de um ponto de referência na reta 1
@@ -389,7 +397,7 @@ def eixo_reta_12(po1: np.array, vs1: np.array, po2: np.array, vs2: np.array, ang
         return __eixo_reta_12_np(po1, vs1, po2, vs2)
 
 
-def ang_twist_dir_nc_rad(po1: np.array, vs1: np.array, po2: np.array, vs2: np.array, angtol=1e-3) -> float:
+def ang_twist_dir_nc_rad(po1: np.ndarray, vs1: np.ndarray, po2: np.ndarray, vs2: np.ndarray, angtol=1e-3) -> float:
     """
     Função que calcula o ângulo de torção de um link em radianos no caso em que os eixos das juntas adjacentes não sejam
     concorrentes.
@@ -400,10 +408,22 @@ def ang_twist_dir_nc_rad(po1: np.array, vs1: np.array, po2: np.array, vs2: np.ar
     :param angtol: Tolerância de ângulo entre as retas para decidir se são paralelas
     :return: Ângulo de torção do link com sinal direcional
     """
-    pass
+    checa_vetor3(po1)
+    checa_vetor3(po2)
+    checa_vetor3(vs1)
+    checa_vetor3(vs2)
+    a = ang_vetores(vs1,vs2)
+    e = eixo_reta_12(po1,vs1,po2,vs2)
+    w = produto_vetorial(vs1,vs2)
+
+    aux = produto_escalar(w,e)
+    if aux > 0:
+        return np.abs(a)
+    else:
+        return -np.abs(a)
 
 
-def ang_twist_dir_ref_rad(vs1: np.array, vs2: np.array, vref: np.array, projtol=1e-3) -> float:
+def ang_twist_dir_ref_rad(vs1: np.ndarray, vs2: np.ndarray, vref: np.ndarray, projtol=1e-3) -> float:
     """
     Calcula o ângulo de torção de um link para o caso de eixos concorrentes. Neste caso deve-se passar um eixo de
     referência vref para que se defina o sentido positivo da rotação de torção.
@@ -413,4 +433,19 @@ def ang_twist_dir_ref_rad(vs1: np.array, vs2: np.array, vref: np.array, projtol=
     :param projtol: Tolerância da projeção de vs1 e vs2 sobre vref para verificar se são perpendiculares
     :return: Ângulo de torção do link com sinal direcional
     """
-    pass
+    a = ang_vetores(vs1,vs2)
+    e = vref
+    w = produto_vetorial(vs1,vs2)
+    
+    if np.abs(produto_escalar(produto_vetorial(vs1,vs2),e)) > projtol:
+        raise ValueError("vref não e perpendicular a vs1 e vs2")
+
+    if np.abs(produto_escalar(vs2, e)) > projtol:
+        raise ValueError("vref não é perpendicular a vs2")
+
+    aux = produto_escalar(e,w)
+
+    if aux > 0:
+        return np.abs(a)
+    else:
+        return -np.abs(a)
