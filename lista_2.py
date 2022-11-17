@@ -173,7 +173,8 @@ r5_0_3 = r5_2_3 @ r5_1_2 @ r5_0_1
 
 u_o_a = rp.cria_vetor3([12, 5, 8])
 
-T_F3_F0 = np.linalg.inv(rp.cria_operador4(r5_0_3, u_o_a))
+T_F3_F0 = np.linalg.inv(rp.cria_operador4(v_o_a=u_o_a))
+T_B3_B0 = np.linalg.inv(rp.cria_operador4(r5_0_3))
 
 print("Matriz de transformação F3 -> F0\n", T_F3_F0, "\n")
 
@@ -182,27 +183,41 @@ print("Matriz de transformação F3 -> F0\n", T_F3_F0, "\n")
 v5a_3 = rp.cria_vetor4(rp.cria_vetor3([2, -1, 0]))
 
 print("A)\nV no frame 0:\n", T_F3_F0 @ v5a_3)
+print("A)\nV na base 0:\n", T_B3_B0 @ v5a_3)
 
 # b)
 
 v5b_3 = rp.cria_vetor4(rp.cria_vetor3([0, -1, 5]))
 
 print("B)\nV no frame 0:\n", T_F3_F0 @ v5b_3)
+print("B)\nV na base 0:\n", T_B3_B0 @ v5b_3)
 
 # c)
 
 v5c_3 = rp.cria_vetor4(rp.cria_vetor3([2, 3, -1]))
 
 print("C)\nV no frame 0:\n", T_F3_F0 @ v5c_3)
+print("C)\nV na base 0:\n", T_B3_B0 @ v5c_3)
 
 # d)
 
 v5d_3 = rp.cria_vetor4(rp.cria_vetor3([4, 1, 7]))
 
 print("D)\nV no frame 0:\n", T_F3_F0 @ v5d_3)
+print("D)\nV na base 0:\n", T_B3_B0 @ v5d_3)
 
 # e)
 
 v5e_3 = rp.cria_vetor4(rp.cria_vetor3([0, 0, 6]))
 
 print("E)\nV no frame 0:\n", T_F3_F0 @ v5e_3)
+print("E)\nV na base 0:\n", T_B3_B0 @ v5e_3)
+
+# Exercício 06
+
+print("\n\nExercício 06\n")
+TH_0_3 = rp.cria_operador4(r5_0_3, u_o_a)
+TH_3_0 = np.linalg.inv(TH_0_3)
+print(TH_0_3)
+print('\n', TH_3_0)
+

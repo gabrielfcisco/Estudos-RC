@@ -1,4 +1,5 @@
 {
     "python.linting.pylintEnabled": true,
-    "python.linting.enabled": false
+    "python.linting.enabled": true,
+    "python.defaultInterpreterPath": "C:\\Users\\ben\\Anaconda3\\python.exe"
 }
